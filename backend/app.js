@@ -7,7 +7,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: "http://localhost:" + process.env.FRONT_PORT,
         methods: ["GET", "POST"],
         transports: ['websocket', 'polling'],
         credentials: true
