@@ -1,4 +1,4 @@
-# docker-seminar
+# sparcschat
 
 ## Project setup
 ```

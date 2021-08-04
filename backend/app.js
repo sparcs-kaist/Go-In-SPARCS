@@ -1,39 +1,27 @@
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
-const { Sequelize, Model, DataTypes } = require('sequelize');
-const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const sequelize = require('./utils/sequelize');
 const http = require('http');
+const app = express();
 const server = http.createServer(app);
-const io = require('socket.io')(server, {
-    cors: {
-        origin: `http://${process.env.FRONT_HOST_PORT}`,
-        methods: ["GET", "POST"],
-        transports: ['websocket', 'polling'],
-        credentials: true
-    },
-    allowEIO3: true
+const io = require('./socket/socketIO')(server);
+const socketIOHandler = require('./socket/socketIOHandler')(io);
+const api_auth = require('./routes/auth');
+const api_id = require('./routes/id');
+const authNeeded = require('./middlewares/auth-api');
+
+//middleware
+app.use(bodyParser.json())
+app.use((err, req, res, next) => {
+    console.log(err);
+    if (!res.headersSent) {
+        res.status(500).send('500ISE T_T');
+    }
 });
 
-app.use(cors())
-app.use(bodyParser.json())
-
-const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USERNAME,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.DB_HOST,
-        dialect: 'postgres'
-    }
-);
-
-class Comment extends Model {}
-Comment.init({
-    name: DataTypes.STRING,
-    title: DataTypes.TEXT,
-    subtitle: DataTypes.TEXT
-}, {sequelize});
+app.get('/api/id', authNeeded, api_id);
+app.post('/api/auth', api_auth);
 
 
 app.get('/', (req, res) => {
@@ -43,65 +31,10 @@ app.get('/', (req, res) => {
     });
 });
 
-const getComments = async () => {
-    const comments = await Comment.findAll({});
-    let p = comments.map(({name, title, subtitle, createdAt}) => ({
-        name,
-        title: `${title} &nbsp; <span class="grey--text text--lighten-1"> ${new Date(createdAt).toLocaleTimeString()}</span>`,
-        subtitle
-    }));
-    p.push({ header: 'Recent comments'});
-    return p.reverse();
-}
-
-const addComment = async (data) => {
-    const name = data.name;
-    const title = data.title;
-    const subtitle = data.subtitle;
-
-    await Comment.create({
-        name, title, subtitle
-    });
-
-    return true;
-}
-
-const deleteComment = async (data) => {
-    await Comment.destroy({
-        where: {},
-        truncate: true
-    });
-
-    return true;
-}
-
-app.use((err, req, res, next) => {
-    res.status(500).send('500ISE T_T');
-});
-
-
-
 (async () => {
     await sequelize.sync();
     const port = parseInt(process.env.PORT || '3008');
     server.listen(port);
-    io.on('connection', async (socket) => {
-
-        socket.on('disconnect', () => {
-            console.log('User exited')
-        });
-
-        socket.on('comments/add', async (data) => {
-            if(await addComment(data)) io.emit('comments', await getComments())
-        });
-
-        socket.on('comments/delete', async (data) => {
-           if(await deleteComment(data)) io.emit('comments', await getComments())
-        });
-
-        console.log('User entered')
-        socket.emit('comments', await getComments())
-    })
 
     console.log("Backend listening from " + port);
 })();
