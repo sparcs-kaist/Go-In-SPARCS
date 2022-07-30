@@ -15,5 +15,6 @@ module.exports = buildSchema(`
   }
   type Query {
     users: [User]
+    update_games(sparcs_id:String!, score:Int): Int
   }
 `);

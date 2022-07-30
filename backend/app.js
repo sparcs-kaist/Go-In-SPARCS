@@ -44,7 +44,7 @@ app.use('/api/graphql/user', authNeeded, graphqlHTTP({
     rootValue: user_resolver,
 }));
 
-app.use('/api/graphql/quizes', graphqlHTTP({
+app.use('/api/graphql/quizes', authNeeded, graphqlHTTP({
     schema: quizSchema,
     rootValue: quizResolver,
 }));

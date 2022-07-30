@@ -197,9 +197,7 @@ export default {
     },
     fetchQuiz() {
       if (this.quiz_num != -1) {
-        this.quiz_data = [];
-        this.quiz_num = -1;
-        this.quiz_score = 0;
+        this.resetQuiz();
       } else {
         http.get("graphql/quizes?query={getQuizes}").then(async (res) => {
           this.resetSelect();
@@ -208,7 +206,7 @@ export default {
         });
       }
     },
-    quizSubmit() {
+    async quizSubmit() {
       const cans = this.quiz_data[this.quiz_num].correct_answers;
       if (!this.quiz_answer_mode) {
         let all_success = true;
@@ -239,11 +237,12 @@ export default {
       }
 
       if (this.quiz_num >= 4) {
-        alert("TODO: send score");
-        alert(this.quiz_score);
-        this.quiz_num = -1;
-        this.quiz_data = [];
-        this.quiz_score = 0;
+        alert(`획득 점수: ${this.quiz_score}`);
+        await http.get(
+          `graphql/user?query={update_games(sparcs_id:"${this.my_name}",score:${this.quiz_score})}`
+        );
+        await this.reloadDash();
+        this.resetQuiz();
         return;
       }
       this.resetSelect();
@@ -257,6 +256,12 @@ export default {
       this.selectedd = false;
       this.selectede = false;
       this.selectedf = false;
+    },
+    resetQuiz() {
+      this.quiz_answer_mode = false;
+      this.quiz_data = [];
+      this.quiz_num = -1;
+      this.quiz_score = 0;
     },
     async reloadDash() {
       const gres = await http.get(
