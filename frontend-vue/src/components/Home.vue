@@ -30,8 +30,21 @@
       </v-container>
       <v-container>
         <p style="font-size: 1.5rem">SPARCS Quiz</p>
-        <v-btn elevation="4" :v-if="quiz_data.length == 0"> Start </v-btn>
-        <v-card elevation="2"></v-card>
+        <v-btn elevation="4" :v-if="quiz_data.length != 0"> Start </v-btn>
+        <v-card elevation="2" :v-if="quiz_data.length == 0">
+          <v-row align="center" class="mx-0">
+            <v-rating
+              :value="4.5"
+              color="amber"
+              dense
+              half-increments
+              readonly
+              size="14"
+            ></v-rating>
+
+            <div class="grey--text ms-4">4.5 (413)</div>
+          </v-row>
+        </v-card>
       </v-container>
     </v-main>
     <v-dialog v-model="githubdialog" persistent max-width="400">
