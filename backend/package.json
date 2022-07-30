@@ -16,6 +16,7 @@
     "express": "latest",
     "jsonwebtoken": "^8.5.1",
     "ldap-authentication": "^2.2.9",
+    "octokit": "^2.0.4",
     "pg": "^8.6.0",
     "sequelize": "^6.6.5",
     "socket.io": "^4.1.3"
