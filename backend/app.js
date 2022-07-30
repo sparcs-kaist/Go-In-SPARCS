@@ -11,6 +11,10 @@ const api_id = require('./routes/id');
 const api_getall = require('./routes/getall');
 const api_github_id = require('./routes/github-id');
 const authNeeded = require('./middlewares/auth-api');
+
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./schema/schema')
+const resolver = require('./resolver/resolver')
 /* const { ApolloServer, gql } = require("apollo-server");
 
 // apollo
@@ -35,6 +39,16 @@ app.post('/api/auth', api_auth);
 app.get('/api/githubid', authNeeded, api_github_id)
 app.get('/api/test', api_test)
 app.get('/api/getall', authNeeded, api_getall)
+
+
+app.use('/graphql/hello', graphqlHTTP({
+    schema,
+    rootValue: resolver,
+}));
+app.use('/graphql/quizes', graphqlHTTP({
+    schema,
+    rootValue: resolver,
+}));
 
 
 app.get('/', (req, res) => {
