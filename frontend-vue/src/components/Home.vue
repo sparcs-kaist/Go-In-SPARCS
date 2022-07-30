@@ -19,62 +19,7 @@
 
     <v-main style="margin-bottom: 120px">
       <v-container>
-        <v-list three-line>
-          <template v-for="(item, index) in items">
-            <v-subheader
-              v-if="item.header"
-              :key="item.header"
-              v-text="item.header"
-            ></v-subheader>
-
-            <v-divider
-              v-else-if="item.divider"
-              :key="index"
-              :inset="item.inset"
-            ></v-divider>
-
-            <v-list-item v-else :key="item.createdAt">
-              <v-list-item-avatar>
-                <div
-                  :class="randcol(item.name)"
-                  style="
-                    height: 40px;
-                    width: 40px;
-                    font-size: 20px;
-                    color: white;
-                    text-align: center;
-                    line-height: 40px;
-                  "
-                >
-                  {{ item.name[0] }}
-                </div>
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <v-list-item-title v-html="item.title"></v-list-item-title>
-
-                <v-list-item-subtitle
-                  class="text--primary"
-                  v-html="item.subtitle"
-                ></v-list-item-subtitle>
-              </v-list-item-content>
-
-              <v-list-item-action>
-                <v-list-item-action-text
-                  v-html="item.info"
-                ></v-list-item-action-text>
-                <v-icon
-                  color="red lighten-1"
-                  class="mt-4"
-                  v-if="item.name === my_name || my_name === 'wheel'"
-                  @click="deleteComment(item.id)"
-                >
-                  mdi-trash-can-outline
-                </v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </template>
-        </v-list>
+        <div>Hello world!</div>
       </v-container>
     </v-main>
     <v-sheet
@@ -112,7 +57,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import io from "socket.io-client";
 import http from "../http";
 
 export default {
@@ -130,29 +74,10 @@ export default {
   }),
   methods: {
     send() {
-      if (this.title) {
-        this.$socket.emit("comments/add", {
-          title: this.title,
-          subtitle: this.subtitle,
-        });
-      } else alert("Please enter title");
-    },
-    randcol(str) {
-      let num = 0;
-      for (let i = 0; i < str.length; i++) num += str.charCodeAt(i);
-      return [
-        "red",
-        "orange",
-        "blue",
-        "green",
-        "purple",
-        "indigo",
-        "pink",
-        "grey",
-      ][num % 8];
+      alert("send");
     },
     deleteComment(id) {
-      this.$socket.emit("comments/delete", { id });
+      console.log("delete:" + id);
     },
     logout() {
       this.$store.dispatch("logout", {}).then(() => {
@@ -167,11 +92,6 @@ export default {
     },
   },
   mounted() {
-    this.$socket = io(`${window.location.protocol}//${window.location.host}`, {
-      query: { token: this.getAccessToken },
-      secure: true,
-    });
-
     //Load user id from server (to check api working)
     http
       .get("id")
@@ -183,15 +103,6 @@ export default {
           console.log("not-logged-in from api");
         }
       });
-
-    this.$socket.on("comments", (data) => {
-      this.items = data;
-    });
-
-    this.$socket.on("auth_error", () => {
-      alert("Please log in again.");
-      this.logout();
-    });
   },
 };
 </script>
