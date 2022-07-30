@@ -19,6 +19,7 @@ User.init({
 
 user_utils = {
     getUser: users => users.map((userObj) => {
+        const repos = JSON.parse(userObj.repos)
         return {
             sparcs_id: userObj.sparcs_id,
             github_id: userObj.github_id,
@@ -26,6 +27,8 @@ user_utils = {
             prs: userObj.prs,
             reviews: userObj.reviews,
             games: userObj.games,
+            repos: repos,
+            repos_num: repos.length,
             total_pt: userObj.commits + userObj.prs + userObj.reviews + userObj.games,
             degree: "뉴비" // TODO
         }

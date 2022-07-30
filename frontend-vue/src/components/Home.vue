@@ -10,7 +10,7 @@
           transition="scale-transition"
           width="120"
         />
-        <span style="font-size: 22px">Goin SPARCS</span>
+        <span style="font-size: 22px; font-weight: bold">Goin</span>
       </div>
       <v-spacer></v-spacer>
       <v-btn text v-text="`Hello ${this.my_name}`"></v-btn>
@@ -19,39 +19,16 @@
 
     <v-main style="margin-bottom: 120px">
       <v-container>
-        <div>Hello world!</div>
+        <p style="font-size: 1.5rem">Dashboard</p>
+        <v-data-table
+          dense
+          :headers="table_headers"
+          :items="table_items"
+          item-key="name"
+          class="elevation-3"
+        ></v-data-table>
       </v-container>
     </v-main>
-    <v-sheet
-      color="blue darken-1"
-      elevation="6"
-      height="auto"
-      width="100%"
-      style="position: fixed; bottom: 0; padding: 8px 16px"
-    >
-      <div style="display: flex; flex-direction: row; align-items: center">
-        <div style="width: 100%; margin-right: 16px">
-          <v-text-field
-            label="Title"
-            hide-details="auto"
-            dark
-            v-model="title"
-            v-on:keyup.enter="send"
-            ref="title"
-          ></v-text-field>
-          <v-text-field
-            label="Subtitle"
-            hide-details="auto"
-            dark
-            v-model="subtitle"
-            v-on:keyup.enter="send"
-          ></v-text-field>
-        </div>
-        <v-btn class="mx-2" fab dark large color="pink" @click="send">
-          <v-icon dark> mdi-send </v-icon>
-        </v-btn>
-      </div>
-    </v-sheet>
     <v-dialog v-model="githubdialog" persistent max-width="400">
       <v-card>
         <v-card-title class="text-h5">
@@ -93,6 +70,20 @@ export default {
     subtitle: "",
     githubdialog: false,
     githubid: "",
+    table_items: [],
+    table_headers: [
+      {
+        text: "SPARCS Nickname",
+        align: "start",
+        sortable: false,
+        value: "sparcs_id",
+      },
+      { text: "Commits", value: "commits" },
+      { text: "PRs", value: "prs" },
+      { text: "# of Repos", value: "repos_num" },
+      { text: "Games Score", value: "games" },
+      { text: "total pts", value: "total_pt" },
+    ],
   }),
   methods: {
     send() {
@@ -114,16 +105,20 @@ export default {
       });
     },
   },
-  mounted() {
+  async mounted() {
     //Load user id from server (to check api working)
     http
       .get("id")
-      .then((res) => {
+      .then(async (res) => {
         this.my_name = res.data.id[0];
         if (!res.data.id[1]) {
           this.githubdialog = true;
         }
+
+        const gres = await http.get("getall");
+        this.table_items = gres.data.users;
       })
+      .then()
       .catch((err) => {
         if (err.response.data.reason === "not-logged-in") {
           console.log("not-logged-in from api");
