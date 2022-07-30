@@ -99,9 +99,12 @@ export default {
       });
     },
     githubsubmit() {
-      http.get("githubid?github_id=" + this.githubid).then((res) => {
+      http.get("githubid?github_id=" + this.githubid).then(async (res) => {
         console.log(res);
         if (res.data.ok) this.githubdialog = false;
+
+        const gres = await http.get("getall");
+        this.table_items = gres.data.users;
       });
     },
   },

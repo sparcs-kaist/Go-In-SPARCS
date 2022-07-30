@@ -11,11 +11,16 @@ const api_id = require('./routes/id');
 const api_getall = require('./routes/getall');
 const api_github_id = require('./routes/github-id');
 const authNeeded = require('./middlewares/auth-api');
-var graphqlHTTP = require('express-graphql');
-var { buildSchema } = require('graphql');
+/* const { ApolloServer, gql } = require("apollo-server");
+
+// apollo
+const aserver = new ApolloServer({ typeDefs, resolvers });
 
 
-
+aserver.listen().then(({ url }) => {
+    console.log(`🚀 Apollo Server ready at ${url}`);
+});
+ */
 //middleware
 app.use(bodyParser.json())
 app.use((err, req, res, next) => {
