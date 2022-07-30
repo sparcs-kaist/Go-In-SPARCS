@@ -10,7 +10,14 @@
           transition="scale-transition"
           width="120"
         />
-        <span style="font-size: 22px; font-weight: bold; font-family: 'Raleway', sans-serif;">GOIN</span>
+        <span
+          style="
+            font-size: 22px;
+            font-weight: bold;
+            font-family: 'Raleway', sans-serif;
+          "
+          >GOIN</span
+        >
       </div>
       <v-spacer></v-spacer>
       <v-btn text v-text="`Hello ${this.my_name}`"></v-btn>
@@ -19,8 +26,16 @@
 
     <v-main style="margin-bottom: 120px">
       <v-container>
-        <p style="margin-top: 15px; font-size: 2rem; font-family: 'Raleway', sans-serif;">Goin Ranking</p>
-        <v-list-item-subtitle style="margin-bottom: 10px;">
+        <p
+          style="
+            margin-top: 15px;
+            font-size: 2rem;
+            font-family: 'Raleway', sans-serif;
+          "
+        >
+          Goin Ranking
+        </p>
+        <v-list-item-subtitle style="margin-bottom: 10px">
           repository의 최근 100개의 commits, PRs을 반영합니다.
         </v-list-item-subtitle>
         <v-data-table
@@ -32,7 +47,9 @@
         ></v-data-table>
       </v-container>
       <v-container>
-        <p style="font-size: 2rem; font-family: 'Raleway', sans-serif;">Develpoer Quiz</p>
+        <p style="font-size: 2rem; font-family: 'Raleway', sans-serif">
+          Developer Quiz
+        </p>
         <v-list-item-subtitle style="margin-bottom: 20px">
           Quiz를 맞추어 SPARCS SLAVE에 도전하세요!
         </v-list-item-subtitle>
@@ -115,7 +132,7 @@
     <v-dialog v-model="githubdialog" max-width="400">
       <v-card>
         <v-card-title class="text-h5">
-          Please Enter Github Account.
+          Github 계정을 입력하세요. (약 1~2분 소요)
         </v-card-title>
         <v-text-field
           id="githubid"
@@ -166,13 +183,14 @@ export default {
     quiz_answer_mode: false,
     notion_text: "정답입니다!",
     table_headers: [
+      { text: "Ranking", value: "index" },
       {
         text: "SPARCS Nickname",
         align: "start",
         sortable: false,
         value: "sparcs_id",
       },
-      { text: "Degree", value: "degree"},
+      { text: "Degree", value: "degree" },
       { text: "Commits", value: "commits" },
       { text: "PRs", value: "prs" },
       { text: "# of Repos", value: "repos_num" },
@@ -198,8 +216,7 @@ export default {
         console.log(res);
         if (res.data.ok) this.githubdialog = false;
 
-        const gres = await http.get("getall");
-        this.table_items = gres.data.users;
+        await this.reloadDash();
       });
     },
     fetchQuiz() {
@@ -275,7 +292,12 @@ export default {
         "graphql/user?query={users{sparcs_id, degree, commits, prs, repos_num, games, total_pt}}"
       );
       console.log(gres);
-      this.table_items = gres.data.data.users;
+      // console.log("asdf", gres.data.users);
+      this.table_items = gres.data.data.users.map((x, i) => {
+        console.log("index", i);
+        return { index: i + 1, ...x };
+      });
+      // this.table_items = gres.data.data.users;
     },
   },
   async mounted() {
@@ -301,5 +323,5 @@ export default {
 </script>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap");
 </style>
