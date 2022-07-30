@@ -5,8 +5,6 @@ const sequelize = require('./utils/sequelize');
 const http = require('http');
 const app = express();
 const server = http.createServer(app);
-const io = require('./socket/socketIO')(server);
-const socketIOHandler = require('./socket/socketIOHandler')(io);
 const api_auth = require('./routes/auth');
 const api_test = require('./routes/apitest')
 const api_id = require('./routes/id');
@@ -26,6 +24,7 @@ app.use((err, req, res, next) => {
 app.get('/api/id', authNeeded, api_id);
 app.post('/api/auth', api_auth);
 app.get('/api/test', api_test)
+
 
 app.get('/', (req, res) => {
     res.status(419).json({
