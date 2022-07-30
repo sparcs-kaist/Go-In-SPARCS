@@ -28,6 +28,16 @@
           class="elevation-3"
         ></v-data-table>
       </v-container>
+      <v-container>
+        <p style="font-size: 1.5rem">SPARCS Quiz</p>
+        <v-data-table
+          dense
+          :headers="table_headers"
+          :items="table_items"
+          item-key="name"
+          class="elevation-3"
+        ></v-data-table>
+      </v-container>
     </v-main>
     <v-dialog v-model="githubdialog" persistent max-width="400">
       <v-card>
@@ -118,8 +128,11 @@ export default {
           this.githubdialog = true;
         }
 
-        const gres = await http.get("getall");
-        this.table_items = gres.data.users;
+        const gres = await http.get(
+          "graphql/user?query={users{sparcs_id, commits, prs, repos_num, games, total_pt}}"
+        );
+        console.log(gres);
+        this.table_items = gres.data.data.users;
       })
       .then()
       .catch((err) => {
