@@ -4,15 +4,18 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon -r dotenv/config app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "latest",
     "crypto": "^1.0.1",
+    "dotenv": "^16.0.1",
     "express": "latest",
     "jsonwebtoken": "^8.5.1",
+    "ldap-authentication": "^2.2.9",
     "pg": "^8.6.0",
     "sequelize": "^6.6.5",
     "socket.io": "^4.1.3"

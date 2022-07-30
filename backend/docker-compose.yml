@@ -1,0 +1,17 @@
+version: "3"
+services:
+  db:
+    image: "postgres:13-alpine"
+    container_name: push_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - "goin-db:/var/lib/postgresql/data"
+    environment:
+      TZ: Asia/Seoul
+    ports:
+      - 5432:5432
+
+volumes:
+  goin-db:
