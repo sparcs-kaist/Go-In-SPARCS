@@ -10,7 +10,7 @@
           transition="scale-transition"
           width="120"
         />
-        <span style="font-size: 22px; font-weight: bold">Goin</span>
+        <span style="font-size: 22px; font-weight: bold; font-family: 'Raleway', sans-serif;">GOIN</span>
       </div>
       <v-spacer></v-spacer>
       <v-btn text v-text="`Hello ${this.my_name}`"></v-btn>
@@ -19,7 +19,10 @@
 
     <v-main style="margin-bottom: 120px">
       <v-container>
-        <p style="font-size: 1.5rem">Dashboard</p>
+        <p style="margin-top: 15px; font-size: 2rem; font-family: 'Raleway', sans-serif;">Goin Ranking</p>
+        <v-list-item-subtitle style="margin-bottom: 10px;">
+          repository의 최근 100개의 commits, PRs을 반영합니다.
+        </v-list-item-subtitle>
         <v-data-table
           dense
           :headers="table_headers"
@@ -29,14 +32,17 @@
         ></v-data-table>
       </v-container>
       <v-container>
-        <p style="font-size: 1.5rem">개발자 Quiz</p>
+        <p style="font-size: 2rem; font-family: 'Raleway', sans-serif;">Develpoer Quiz</p>
+        <v-list-item-subtitle style="margin-bottom: 20px">
+          Quiz를 맞추어 SPARCS SLAVE에 도전하세요!
+        </v-list-item-subtitle>
         <v-btn @click="fetchQuiz">
           {{ quiz_data.length == 0 ? "Start" : "Stop" }}
         </v-btn>
         <v-card class="mx-auto mt-4" v-if="quiz_data.length != 0">
           <v-list-item three-line>
             <v-list-item-content>
-              <div class="text-overline mb-4">#{{ quiz_num + 1 }}</div>
+              <div class="text-h6 mb-4">#{{ quiz_num + 1 }}</div>
               <v-list-item-title class="text-h5 mb-1">
                 {{ quiz_data[quiz_num].question }}
               </v-list-item-title>
@@ -166,11 +172,12 @@ export default {
         sortable: false,
         value: "sparcs_id",
       },
+      { text: "Degree", value: "degree"},
       { text: "Commits", value: "commits" },
       { text: "PRs", value: "prs" },
       { text: "# of Repos", value: "repos_num" },
-      { text: "Games Score", value: "games" },
-      { text: "total pts", value: "total_pt" },
+      { text: "Quiz Score", value: "games" },
+      { text: "Total pts", value: "total_pt" },
     ],
   }),
   methods: {
@@ -265,7 +272,7 @@ export default {
     },
     async reloadDash() {
       const gres = await http.get(
-        "graphql/user?query={users{sparcs_id, commits, prs, repos_num, games, total_pt}}"
+        "graphql/user?query={users{sparcs_id, degree, commits, prs, repos_num, games, total_pt}}"
       );
       console.log(gres);
       this.table_items = gres.data.data.users;
@@ -292,3 +299,7 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap');
+</style>
