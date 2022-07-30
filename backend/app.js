@@ -11,6 +11,8 @@ const api_id = require('./routes/id');
 const api_getall = require('./routes/getall');
 const api_github_id = require('./routes/github-id');
 const authNeeded = require('./middlewares/auth-api');
+var graphqlHTTP = require('express-graphql');
+var { buildSchema } = require('graphql');
 
 
 
