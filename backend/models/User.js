@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../utils/sequelize');
+const { getCommits, getPRs, getMyRepos } = require('../utils/github-api');
 
 class User extends Model { }
 const interleave = (arr, thing) => [].concat(...arr.map(n => [n, thing])).slice(0, -1)
@@ -26,6 +27,7 @@ user_utils = {
             prs: userObj.prs,
             reviews: userObj.reviews,
             games: userObj.games,
+            repos: userObj.repos,
             total_pt: userObj.commits + userObj.prs + userObj.reviews + userObj.games,
             degree: "뉴비" // TODO
         }
@@ -35,10 +37,16 @@ user_utils = {
 
 User.handlers = {
     addUser: async (sparcs_id, github_id) => {
-        let commits = 0 // TODO
-        let prs = Math.floor(Math.random() * 1000) // TODO
+        console.time('commits')
+        let commits = await getCommits(github_id)
+        console.timeEnd('commits')
+        console.time('prs')
+        let prs = await getPRs(github_id)
+        console.timeEnd('prs')
+        console.time('repos')
         let reviews = 0 // TODO
-        let repos = ["Ara"] // TODO
+        let repos = await getMyRepos(github_id)
+        console.timeEnd('repos')
 
         await User.create({
             sparcs_id,
