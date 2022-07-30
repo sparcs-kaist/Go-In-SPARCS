@@ -1,3 +1,4 @@
+const { degrees, caculateDegrees } = require('../seeders/degrees');
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../utils/sequelize');
 const { getCommits, getPRs, getMyRepos } = require('../utils/github-api');
@@ -13,7 +14,6 @@ User.init({
     github_id: DataTypes.STRING,
     commits: DataTypes.INTEGER,
     prs: DataTypes.INTEGER,
-    reviews: DataTypes.INTEGER,
     games: DataTypes.INTEGER,
     repos: DataTypes.STRING,
 }, { sequelize });
@@ -21,17 +21,19 @@ User.init({
 user_utils = {
     getUser: users => users.map((userObj) => {
         const repos = JSON.parse(userObj.repos)
+        const total_pt = userObj.commits + userObj.prs*5 + repos.length*10 + userObj.games*5;
+        const degree = caculateDegrees(total_pt);
+
         return {
             sparcs_id: userObj.sparcs_id,
             github_id: userObj.github_id,
             commits: userObj.commits,
             prs: userObj.prs,
-            reviews: userObj.reviews,
             games: userObj.games,
             repos: repos,
             repos_num: repos.length,
-            total_pt: userObj.commits + userObj.prs + userObj.reviews + userObj.games,
-            degree: "뉴비" // TODO
+            total_pt: total_pt,
+            degree: degree
         }
     })
 
@@ -46,7 +48,6 @@ User.handlers = {
         let prs = await getPRs(github_id)
         console.timeEnd('prs')
         console.time('repos')
-        let reviews = 0 // TODO
         let repos = await getMyRepos(github_id)
         console.timeEnd('repos')
 
@@ -55,7 +56,6 @@ User.handlers = {
             github_id,
             commits,
             prs,
-            reviews,
             repos: JSON.stringify(repos),
             games: 0
         })
