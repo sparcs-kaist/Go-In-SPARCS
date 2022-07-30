@@ -10,7 +10,7 @@
           transition="scale-transition"
           width="120"
         />
-        <span style="font-size: 22px; font-weight: bold">GOIN</span>
+        <span style="font-size: 22px; font-weight: bold; font-family: 'Raleway', sans-serif;">GOIN</span>
       </div>
       <v-spacer></v-spacer>
       <v-btn text v-text="`Hello ${this.my_name}`"></v-btn>
@@ -19,8 +19,8 @@
 
     <v-main style="margin-bottom: 120px">
       <v-container>
-        <p style="margin-top: 15px; font-size: 2rem">Goin Ranking</p>
-        <v-list-item-subtitle style="margin-bottom: 10px">
+        <p style="margin-top: 15px; font-size: 2rem; font-family: 'Raleway', sans-serif;">Goin Ranking</p>
+        <v-list-item-subtitle style="margin-bottom: 10px;">
           repository의 최근 100개의 commits, PRs을 반영합니다.
         </v-list-item-subtitle>
         <v-data-table
@@ -32,7 +32,7 @@
         ></v-data-table>
       </v-container>
       <v-container>
-        <p style="font-size: 2rem">Develpoer Quiz</p>
+        <p style="font-size: 2rem; font-family: 'Raleway', sans-serif;">Develpoer Quiz</p>
         <v-list-item-subtitle style="margin-bottom: 20px">
           Quiz를 맞추어 SPARCS SLAVE에 도전하세요!
         </v-list-item-subtitle>
@@ -294,3 +294,7 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap');
+</style>
