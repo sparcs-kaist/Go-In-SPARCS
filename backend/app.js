@@ -14,6 +14,8 @@ const authNeeded = require('./middlewares/auth-api');
 const { graphqlHTTP } = require('express-graphql');
 const user_schema = require('./schema/user_schema')
 const user_resolver = require('./resolver/user_resolver')
+const quizSchema = require('./schema/quiz')
+const quizResolver = require('./resolver/quiz')
 /* const { ApolloServer, gql } = require("apollo-server");
 
 // apollo
@@ -40,6 +42,11 @@ app.get('/api/test', api_test)
 app.use('/api/graphql/user', authNeeded, graphqlHTTP({
     schema: user_schema,
     rootValue: user_resolver,
+}));
+
+app.use('/api/graphql/quizes', graphqlHTTP({
+    schema: quizSchema,
+    rootValue: quizResolver,
 }));
 
 

@@ -30,13 +30,8 @@
       </v-container>
       <v-container>
         <p style="font-size: 1.5rem">SPARCS Quiz</p>
-        <v-data-table
-          dense
-          :headers="table_headers"
-          :items="table_items"
-          item-key="name"
-          class="elevation-3"
-        ></v-data-table>
+        <v-btn elevation="4" :v-if="quiz_data.length == 0"> Start </v-btn>
+        <v-card elevation="2"></v-card>
       </v-container>
     </v-main>
     <v-dialog v-model="githubdialog" persistent max-width="400">
@@ -81,6 +76,7 @@ export default {
     githubdialog: false,
     githubid: "",
     table_items: [],
+    quiz_data: [],
     table_headers: [
       {
         text: "SPARCS Nickname",
