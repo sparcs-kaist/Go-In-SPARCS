@@ -8,6 +8,7 @@ const server = http.createServer(app);
 const api_auth = require('./routes/auth');
 const api_test = require('./routes/apitest')
 const api_id = require('./routes/id');
+const api_github_id = require('./routes/github-id');
 const authNeeded = require('./middlewares/auth-api');
 
 
@@ -23,6 +24,7 @@ app.use((err, req, res, next) => {
 
 app.get('/api/id', authNeeded, api_id);
 app.post('/api/auth', api_auth);
+app.get('/api/githubid', authNeeded, api_github_id)
 app.get('/api/test', api_test)
 
 

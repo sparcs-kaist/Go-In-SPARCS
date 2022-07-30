@@ -2,6 +2,7 @@ const { exec } = require('child_process');
 const jwt = require('jsonwebtoken');
 const secret = require('../utils/secret')
 const { authenticate } = require('ldap-authentication')
+const userHandler = require('../models/user').handlers
 
 function escape(str) {
     return str
@@ -22,7 +23,11 @@ module.exports = async (req, res) => {
             userPassword: password,
         })
 
-        const payload = { id, type: 'auth' };
+        const me = await userHandler.getUser(id)
+        const github_id = me ? me.github_id : null
+
+
+        const payload = { id: [id, github_id], type: 'auth' };
         const token = await new Promise(resolve => {
             jwt.sign(payload, secret, { expiresIn: "6h" }, (err, token) => {
                 if (err) {
@@ -32,8 +37,6 @@ module.exports = async (req, res) => {
                 resolve(token);
             });
         });
-
-        console.log(token);
 
         res.json({
             ok: true,

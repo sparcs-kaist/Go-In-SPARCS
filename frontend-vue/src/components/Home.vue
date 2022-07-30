@@ -10,7 +10,7 @@
           transition="scale-transition"
           width="120"
         />
-        <span style="font-size: 22px">Chat</span>
+        <span style="font-size: 22px">Goin SPARCS</span>
       </div>
       <v-spacer></v-spacer>
       <v-btn text v-text="`Hello ${this.my_name}`"></v-btn>
@@ -52,6 +52,26 @@
         </v-btn>
       </div>
     </v-sheet>
+    <v-dialog v-model="githubdialog" persistent max-width="400">
+      <v-card>
+        <v-card-title class="text-h5">
+          Please Enter Github Account.
+        </v-card-title>
+        <v-text-field
+          id="githubid"
+          name="githubid"
+          label="GithubID"
+          v-model="githubid"
+          style="padding: 16px 16px"
+        ></v-text-field>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="githubsubmit">
+            제출
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -71,13 +91,12 @@ export default {
     items: [],
     title: "",
     subtitle: "",
+    githubdialog: false,
+    githubid: "",
   }),
   methods: {
     send() {
       alert("send");
-    },
-    deleteComment(id) {
-      console.log("delete:" + id);
     },
     logout() {
       this.$store.dispatch("logout", {}).then(() => {
@@ -85,9 +104,13 @@ export default {
           this.$router.push({
             name: "Login",
           });
-          this.$socket.disconnect();
-          this.$socket = null;
         }
+      });
+    },
+    githubsubmit() {
+      http.get("githubid?github_id=" + this.githubid).then((res) => {
+        console.log(res);
+        if (res.data.ok) this.githubdialog = false;
       });
     },
   },
@@ -96,7 +119,10 @@ export default {
     http
       .get("id")
       .then((res) => {
-        this.my_name = res.data.id;
+        this.my_name = res.data.id[0];
+        if (!res.data.id[1]) {
+          this.githubdialog = true;
+        }
       })
       .catch((err) => {
         if (err.response.data.reason === "not-logged-in") {

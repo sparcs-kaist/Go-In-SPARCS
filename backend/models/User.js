@@ -61,7 +61,7 @@ User.handlers = {
     },
     getUserBySort: async () => {
         let data = user_utils.getUser(await User.findAll({}))
-        data.sort((a, b) => b.total_pt - a.total_pt)
+        data.sort((a, b) => a.total_pt - b.total_pt)
         return data
     },
     deleteAll: async () => {
