@@ -1,4 +1,6 @@
-# sparcschat
+# goin-sparcs
+
+2022-summer-hackathon
 
 ## Project setup
 ```
